@@ -5,7 +5,7 @@ import BrownCs22.Library.Tactics
 # Welcome to the Lean section of HW1!
 
 Some general guidelines, before we get started.
-
+ f
 * When you're doing Lean homework assignments, including this one,
   do *not* edit any of the `import` statements above the 
   opening comment. This will most likely break our autograder.
@@ -68,10 +68,12 @@ will be very helpful here!
 
 /- 3 points -/
 theorem problem_1 : (p ∧ q ∧ r) → (p ∧ r) := by 
-  sorry
-
-
-
+  intro hpqr
+  eliminate hpqr with hp hqr
+  eliminate hqr with hq hr
+  split_goal
+  assumption
+  assumption
 /-
 
 ## Problem 2
@@ -92,9 +94,11 @@ Again, your task is to fill in the `sorry` below to prove this statement.
 
 /- 3 points -/
 theorem problem_2 : (p → ¬ q) → ¬ (p ∧ q) := by 
-  sorry
-
-
+intro hpnotq
+intro hpandq
+eliminate hpandq with hp and hq
+have hx : ¬q := hpnotq hp
+contradiction
 /-
 ## Problem 3
 
@@ -122,4 +126,15 @@ Your task: translate this argument to Lean.
 
 /- 4 points -/
 theorem problem_3 : ((p ∨ q) ∧ (p → r) ∧ (q → s)) → (r ∨ s) := by 
-  sorry
+  intro pqprqs
+  eliminate pqprqs with porq prqs
+  eliminate prqs with pr qs
+  eliminate porq with p q
+  { have hr : r := pr p
+    left
+    assumption
+  }
+  { have hs : s := qs q
+    right
+    assumption
+  }
